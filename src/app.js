@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors'; 
+import routerTours from './routes/rutas.js';
 
 const app = express();
 
@@ -8,6 +9,7 @@ app.use(cors());
 
 // Middleware que permite responder y recibir objetos JSON
 app.use(express.json());
+app.use('/api', routerTours);
 
 // Manejar 404 - Endpoint no encontrado
 app.use((req, res, next) => {
@@ -18,3 +20,4 @@ app.use((req, res, next) => {
 
 
 app.listen(3000);
+
