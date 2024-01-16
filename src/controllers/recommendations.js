@@ -1,7 +1,7 @@
 import { pool } from "../database.js";
 
 
-export const tours = async (req, res) => {
+export const recommendations = async (req, res) => {
     try {
         const [rows] = await pool.query("CALL getRecomendation(?);")
         if (rows[0].length <= 0) {
