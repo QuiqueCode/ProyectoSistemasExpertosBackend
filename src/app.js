@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors'; 
 import routerTours from './routes/rutas.js';
 import recommendations from './routes/rutas.js';
+import { preference } from './controllers/preference.js';
 
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(cors());
 
 // Middleware que permite responder y recibir objetos JSON
 app.use(express.json());
-app.use('/api', routerTours,recommendations);
+app.use('/api', routerTours,recommendations, preference);
 
 // Manejar 404 - Endpoint no encontrado
 app.use((req, res, next) => {
