@@ -41,21 +41,16 @@ export const createUser = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { _emailAddress, _password } = req.body;
-        let response = ""
-        const [hashedPassword] = await pool.query("CALL login(?);", [_emailAddress]);
-
-        if (hashedPassword[0][0] !== undefined) {
-            const passwordMatch = await bcrypt.compare(_password, hashedPassword[0][0].password);
-            if (passwordMatch) {
-                response = res.status(200).json({ status: 1 });
-            } else {
-                response = res.status(404).json({ status: 0 });
-            }
-        }else{
-            response = res.status(404).json({ status: 0 });
+        const [data] = await pool.query(
+          "CALL login(?)", [_emailAddress]
+        )
+        const comparacion = await bcrypt.compare(_password, data[0][0].password);
+        if (comparacion) {
+          return res.status(200).json({ message: 1 })
+        } else {
+          return res.status(403).json({ message: 0 })
         }
-        return response;
-    } catch (error) {
-        InternalError(res, error);
-    }
+      } catch (error) {
+        return res.status(500).json({ message: 2 })
+      }
 }
