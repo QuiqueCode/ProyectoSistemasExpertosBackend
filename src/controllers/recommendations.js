@@ -1,27 +1,34 @@
 import { pool } from "../database.js";
 
+//Returns the preferences response from the database
+async function preferences(idUser){
+    return await pool.query("CALL getPreference(?);", [idUser]);
+}
 
-export const recommendations = async (req, res) => {
+//Returns the recommendations response from the database
+async function recommendations(idUser){
+    return await pool.query("CALL getRecomendation(?);", [idUser]);
+}
+
+export const methodRecommend = async (req, res) => {
     try {
+        const id = req.query.id;
+        //get preference value
+        const [[[preferencesRows]]] = await preferences(id)
+        //get recommendation value
+        const [[[recomendationRows]]] = await recommendations(id)
+        let rows;
 
-        const [recomendationRows] = await pool.query("CALL getRecomendation(?);", [req.query.id]);
-
-        if (recomendationRows[0].length <= 0) {
-            return res.status(404).json({ message: "Recomendación no encontrada." });
+        if(preferencesRows.preference != 0){
+            [[rows]] = await pool.query("CALL getToursForRecomendation(?);", [preferencesRows.preference]);
+        }else{
+            [[rows]] = await pool.query("CALL getToursForRecomendation(?);", [recomendationRows.result]);
         }
 
-        const recomendationId = recomendationRows[0][0].result;
-        const [tourRows] = await pool.query("CALL getToursForRecomendation(?);", [recomendationId]);
+        return res.json(rows);
 
-        if (tourRows[0].length <= 0) {
-            return res.status(404).json({ message: "Tours no encontrados para esta recomendación y usuario." });
-        }
-
-        const tours = tourRows[0];
-
-        return res.json(tours);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Error interno del servidor." });
+        return res.status(500);
     }
 }

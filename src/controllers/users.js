@@ -46,11 +46,12 @@ export const login = async (req, res) => {
         )
         const comparacion = await bcrypt.compare(_password, data[0][0].password);
         if (comparacion) {
-          return res.status(200).json({ message: 1 })
+          return res.status(200).json(data)
         } else {
           return res.status(403).json({ message: 0 })
         }
       } catch (error) {
+        console.log(error)
         return res.status(500).json({ message: 2 })
       }
 }
