@@ -29,10 +29,21 @@ export const methodRecommend = async (req, res) => {
         recomendationRows.result,
       ]);
     }
-
     return res.json(rows);
+
   } catch (error) {
-    console.error(error);
     return res.status(500);
   }
 };
+
+export const counterTours = async (req, res) => {
+  try{
+    const {_id, _category} = req.query;
+
+    await pool.query('SELECT counterUpdate(?,?)', [_id, _category]);
+    return res.status(200).json({"data":1});
+
+  }catch(error){
+    return res.status(500);
+  }
+}
