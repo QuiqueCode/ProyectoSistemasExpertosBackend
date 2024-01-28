@@ -1,9 +1,7 @@
 import { Router } from "express";
 import { tours } from "../controllers/tours.js";
-import { createUser, login, changePreference } from "../controllers/users.js";
-import { methodRecommend } from "../controllers/recommendations.js";
+import { createUser, login, changePreference, getPreference } from "../controllers/users.js";
 import { counterTours, methodRecommend } from "../controllers/recommendations.js";
-import { createUser, login } from "../controllers/users.js";
 
 const routerTours=Router();
 routerTours.get('/recommendations',methodRecommend);
@@ -12,4 +10,5 @@ routerTours.post('/users', createUser);
 routerTours.post('/login', login);
 routerTours.patch('/counter', counterTours);
 routerTours.patch('/updatepreference', changePreference);
+routerTours.get('/getpreference',  getPreference);
 export default routerTours;

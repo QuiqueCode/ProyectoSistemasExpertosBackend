@@ -56,3 +56,19 @@ export const changePreference = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+export const getPreference = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+      const [rows] = await pool.query("CALL getPreference(?);", [
+        userId
+      ])
+      if (rows[0].length <= 0) {
+          return res.status(404).json({ message: 0 })
+      }
+      return res.json(rows[0])
+  } catch (error) {
+      return error;
+  }
+}
