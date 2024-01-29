@@ -39,11 +39,21 @@ export const methodRecommend = async (req, res) => {
 export const counterTours = async (req, res) => {
   try{
     const {_id, _category} = req.query;
-
     await pool.query('SELECT counterUpdate(?,?)', [_id, _category]);
     return res.status(200).json({"data":1});
 
   }catch(error){
-    return res.status(500);
+    return res.status(500).json({"error":error});
+  }
+}
+
+export const getDataUser = async (req, res) => {
+  try{
+    const {_id} = req.query;
+    console.log(_id);
+    const [[[data]]] = await pool.query('CALL dataUser(?);', _id);
+    return res.status(200).json(data);
+   }catch(error){
+    return res.status(500).json({"error":error})
   }
 }
